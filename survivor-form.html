@@ -117,7 +117,8 @@
     <p class="eyebrow">Reach Out</p>
     <h2 id="reach-h">Your Journey Starts Here</h2>
     <p class="mt-2">Your privacy is our priority. We will only contact you in the way you feel most comfortable. Sending this form opens your own email app, so the message comes from you and nothing is stored on this website.</p>
-    <form class="mt-6" data-mailform data-subject="Survivor support request" novalidate>
+    <form class="mt-6" data-form data-kind="survivor" data-critical novalidate data-thanks="Your message has been sent privately to Living Hope. Nothing has been saved on this device. Someone will reach out using the contact method you chose.">
+      <div class="hp" aria-hidden="true"><label for="hp-survivor">Company</label><input id="hp-survivor" name="company" type="text" tabindex="-1" autocomplete="off"></div>
       <div>
         <label for="s-name">Full Name</label>
         <input type="text" id="s-name" name="name" autocomplete="name" required>
@@ -187,7 +188,8 @@
       <div class="footer-signup">
         <h2>Stay Close</h2>
         <p>Prayer needs, survivor stories, and where the work is going next. One short note a month.</p>
-        <form class="signup" data-mailform data-subject="Newsletter signup">
+        <form class="signup" data-form data-kind="newsletter" data-thanks="Thank you. You are on the list.">
+          <div class="hp" aria-hidden="true"><label for="hp-news">Company</label><input id="hp-news" name="company" type="text" tabindex="-1" autocomplete="off"></div>
           <label class="visually-hidden" for="signup-email">Email address</label>
           <div class="signup__row">
             <input id="signup-email" name="Email" type="email" required autocomplete="email" placeholder="you@example.com">

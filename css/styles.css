@@ -1154,6 +1154,14 @@ main::after {
 .mt-2 { margin-top: 1rem; } .mt-4 { margin-top: 2rem; } .mt-6 { margin-top: 3rem; }
 .max-c { margin-left: auto; margin-right: auto; }
 
+/* Honeypot. Off-canvas rather than display:none, because some bots skip
+   hidden inputs; aria-hidden + tabindex -1 keeps it away from real people
+   and from assistive tech. A value in here means it was not a person. */
+.hp {
+  position: absolute; left: -9999px; top: auto;
+  width: 1px; height: 1px; overflow: hidden;
+}
+
 .visually-hidden {
   position: absolute; width: 1px; height: 1px;
   margin: -1px; padding: 0; overflow: hidden;

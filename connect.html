@@ -116,7 +116,8 @@
           <p>Are you interested in volunteering, donating, or partnering with Living Hope? Your support changes lives. Let&rsquo;s make a difference together.</p>
         </div>
       </div>
-      <form data-mailform data-subject="Website message for Living Hope" novalidate>
+      <form data-form data-kind="contact" novalidate data-thanks="Thank you. Your message is with Living Hope and someone will be in touch.">
+      <div class="hp" aria-hidden="true"><label for="hp-contact">Company</label><input id="hp-contact" name="company" type="text" tabindex="-1" autocomplete="off"></div>
         <h3 class="visually-hidden">Send us a message</h3>
         <div class="form-row">
           <div>
@@ -169,7 +170,8 @@
       <div class="footer-signup">
         <h2>Stay Close</h2>
         <p>Prayer needs, survivor stories, and where the work is going next. One short note a month.</p>
-        <form class="signup" data-mailform data-subject="Newsletter signup">
+        <form class="signup" data-form data-kind="newsletter" data-thanks="Thank you. You are on the list.">
+          <div class="hp" aria-hidden="true"><label for="hp-news">Company</label><input id="hp-news" name="company" type="text" tabindex="-1" autocomplete="off"></div>
           <label class="visually-hidden" for="signup-email">Email address</label>
           <div class="signup__row">
             <input id="signup-email" name="Email" type="email" required autocomplete="email" placeholder="you@example.com">

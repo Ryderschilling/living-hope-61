@@ -238,7 +238,8 @@
     <p class="eyebrow">Partnership and investment</p>
     <h2 id="pd-h">Start a Conversation</h2>
     <p>Tell us a little about how you would like to come alongside this mission. Jessie reads every one of these.</p>
-    <form data-mailform data-subject="Partnership inquiry">
+    <form data-form data-kind="partnership" data-thanks="Thank you. Your note is with Living Hope and Jessie will be in touch.">
+      <div class="hp" aria-hidden="true"><label for="hp-partner">Company</label><input id="hp-partner" name="company" type="text" tabindex="-1" autocomplete="off"></div>
       <div class="form-row">
         <div>
           <label for="pd-name">Name</label>
@@ -276,7 +277,8 @@
       <div class="footer-signup">
         <h2>Stay Close</h2>
         <p>Prayer needs, survivor stories, and where the work is going next. One short note a month.</p>
-        <form class="signup" data-mailform data-subject="Newsletter signup">
+        <form class="signup" data-form data-kind="newsletter" data-thanks="Thank you. You are on the list.">
+          <div class="hp" aria-hidden="true"><label for="hp-news">Company</label><input id="hp-news" name="company" type="text" tabindex="-1" autocomplete="off"></div>
           <label class="visually-hidden" for="signup-email">Email address</label>
           <div class="signup__row">
             <input id="signup-email" name="Email" type="email" required autocomplete="email" placeholder="you@example.com">

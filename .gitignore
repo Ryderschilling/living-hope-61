@@ -1,11 +1,6 @@
-# macOS
+.env
+.env.local
 .DS_Store
-**/.DS_Store
-
-# Old versions kept locally, not part of the site
 _to_delete/
-
-# Editor / tooling
-.vscode/
-.idea/
 node_modules/
+.vercel

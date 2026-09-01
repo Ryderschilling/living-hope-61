@@ -352,27 +352,88 @@
   if (yr) yr.textContent = String(new Date().getFullYear());
 
   /* ---------------------------------------------------------
-     Mail-composed forms. No backend, nothing stored.
+     Forms. Posted to /api/contact, which emails Living Hope.
+
+     These used to be mailto: links. That never actually delivered
+     anything, it just opened the visitor's mail app and hoped. Worse, on
+     the survivor form it left the message in the Sent and Drafts folders
+     of a device somebody else may be checking, which defeats Quick Exit.
+
+     A form marked data-critical (the survivor form) NEVER falls back to
+     mailto when the endpoint is down. It shows the 24/7 hotline instead,
+     because a phone call is the safe path and a mail app is not.
      --------------------------------------------------------- */
-  document.querySelectorAll('form[data-mailform]').forEach(function (form) {
+  var HOTLINE = 'If this does not work, call the free 24/7 hotline on 1-855-558-6484, or text BeFree to 233733.';
+
+  document.querySelectorAll('form[data-form]').forEach(function (form) {
+    var status = form.querySelector('.form-status');
+    var submit = form.querySelector('[type="submit"]');
+    var critical = form.hasAttribute('data-critical');
+    var busy = false;
+
+    function say(msg) { if (status) status.textContent = msg; }
+
     form.addEventListener('submit', function (e) {
       e.preventDefault();
+      if (busy) return;
       if (!form.reportValidity()) return;
-      var subject = form.getAttribute('data-subject') || 'Website message';
-      var lines = [];
+
+      var fields = [];
+      var honey = '';
       form.querySelectorAll('input, select, textarea').forEach(function (field) {
         if (!field.name || field.type === 'submit') return;
+        if (field.name === 'company') { honey = field.value; return; }
         if ((field.type === 'checkbox' || field.type === 'radio') && !field.checked) return;
-        var labelEl = field.closest('label') || form.querySelector('label[for="' + field.id + '"]');
-        var label = labelEl ? labelEl.textContent.trim() : field.name;
-        if (field.value) lines.push(label + ': ' + field.value);
+        if (!field.value) return;
+        /* A radio or checkbox sits inside its own <label>, so the obvious
+           read gives "Safe housing: Safe housing" and the QUESTION is lost.
+           The fieldset's legend is the question; the input's value is the
+           answer. Same-legend answers then merge into one line below. */
+        var group = field.closest('fieldset');
+        var legend = group && group.querySelector('legend');
+        var label;
+        if ((field.type === 'checkbox' || field.type === 'radio') && legend) {
+          label = legend.textContent.trim();
+        } else {
+          var labelEl = field.closest('label') || form.querySelector('label[for="' + field.id + '"]');
+          label = labelEl ? labelEl.textContent.trim() : field.name;
+        }
+        var existing = fields.filter(function (f) { return f.label === label; })[0];
+        if (existing) existing.value += ', ' + field.value;      // checkbox groups
+        else fields.push({ label: label, value: field.value });
       });
-      var mailto = 'mailto:Livinghopeinc61@gmail.com'
-        + '?subject=' + encodeURIComponent(subject)
-        + '&body=' + encodeURIComponent(lines.join('\n'));
-      var status = form.querySelector('.form-status');
-      if (status) status.textContent = 'Your email app is opening with your message ready to send. If nothing opens, email us at Livinghopeinc61@gmail.com.';
-      window.location.href = mailto;
+      if (!fields.length) return;
+
+      busy = true;
+      if (submit) { submit.disabled = true; submit.dataset.label = submit.textContent; submit.textContent = 'Sending'; }
+      say('Sending your message.');
+
+      fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          kind: form.getAttribute('data-kind') || 'contact',
+          company: honey,
+          fields: fields
+        })
+      })
+        .then(function (r) { return r.json().catch(function () { return { ok: r.ok }; }); })
+        .then(function (data) {
+          if (!data || !data.ok) throw new Error('send_failed');
+          form.reset();
+          say(form.getAttribute('data-thanks') || 'Thank you. Your message has been sent and someone will be in touch.');
+        })
+        .catch(function () {
+          if (critical) {
+            say('Something went wrong sending that. Please call (865) 209-8210. ' + HOTLINE);
+          } else {
+            say('Something went wrong sending that. Please email Livinghopeinc61@gmail.com and we will get straight back to you.');
+          }
+        })
+        .then(function () {
+          busy = false;
+          if (submit) { submit.disabled = false; submit.textContent = submit.dataset.label || 'Send'; }
+        });
     });
   });
 })();
