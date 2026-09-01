@@ -1,0 +1,1291 @@
+/* ============================================================
+   Living Hope, livinghope61.com
+   Palette and direction from Jessie Coates' brand brief.
+   built by Ryder Schilling, ryderschilling.com
+   ============================================================ */
+
+/* ---------- Fonts (self-hosted) ---------- */
+@font-face {
+  font-family: 'Marcellus';
+  src: url('../assets/fonts/marcellus-latin-400-normal.woff2') format('woff2');
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Karla';
+  src: url('../assets/fonts/karla-latin-400-normal.woff2') format('woff2');
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Karla';
+  src: url('../assets/fonts/karla-latin-500-normal.woff2') format('woff2');
+  font-weight: 500; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Karla';
+  src: url('../assets/fonts/karla-latin-700-normal.woff2') format('woff2');
+  font-weight: 700; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Brittany Signature';
+  src: url('../assets/fonts/brittany-signature.woff2') format('woff2');
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+
+/* ---------- Tokens ---------- */
+:root {
+  /* Jessie's palette, verbatim from her brief */
+  --bg: #F5F0E6;            /* Warm Ivory, primary background */
+  --surface: #FBF8F2;       /* Soft Warm White, cards and alternating sections */
+  --sand: #EDE5D2;          /* deeper cream band */
+  --olive: #626443;         /* Living Hope Olive, primary brand */
+  --olive-deep: #4C4E33;    /* hover / active */
+  --sage: #96957A;          /* decorative only, fails contrast for text */
+  --gold: #B38A48;          /* Antique Gold, thin lines and icons only */
+  --gold-deep: #7E622C;     /* gold that passes 4.5:1 on ivory, for text */
+  --wood: #B58B60;          /* Warm Wood, small accents */
+  --ink: #34362E;           /* Soft Charcoal, body text */
+  --ink-2: #4C4E43;         /* secondary text */
+  --muted: #68695C;         /* captions, 4.9:1 on ivory */
+
+  /* dark ground (footer, scripture band) */
+  --dark: #2E3028;
+  --ondark: #F5F0E6;
+  --ondark-2: #C6C8B8;
+  --gold-ondark: #C9A05C;
+
+  --border: rgba(52, 54, 46, 0.16);
+
+  --font-head: 'Marcellus', 'Georgia', serif;
+  --font-body: 'Karla', 'Helvetica Neue', Arial, sans-serif;
+  --font-script: 'Brittany Signature', 'Segoe Script', cursive;
+
+  --ease: cubic-bezier(.22, 1, .36, 1);
+
+  --s-1: .5rem; --s-2: 1rem; --s-3: 1.5rem; --s-4: 2rem;
+  --s-6: 3rem; --s-8: 4rem; --s-12: 6rem; --s-16: 8rem;
+
+  --gutter: clamp(1.25rem, 4.5vw, 3rem);   /* .container's side padding, named so a rail can break out of it */
+
+  --header-h: 76px;
+  --header-h-lg: 108px;
+}
+
+/* ---------- Reset / base ---------- */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--header-h) + 12px);
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  font-size: 1.0625rem;
+}
+
+img, video { max-width: 100%; display: block; }
+a { color: inherit; }
+ul[class], ol[class] { list-style: none; }
+button { font-family: inherit; cursor: pointer; }
+
+:focus-visible {
+  outline: 2px solid var(--olive);
+  outline-offset: 3px;
+}
+.on-dark :focus-visible, .site-footer :focus-visible, .band-dark :focus-visible {
+  outline-color: var(--ondark);
+}
+
+::selection { background: var(--olive); color: var(--bg); }
+
+/* ---------- Skip link ---------- */
+.skip-link {
+  position: absolute; left: 1rem; top: -100px; z-index: 300;
+  background: var(--olive); color: var(--bg);
+  padding: .75rem 1.25rem; font-weight: 700; text-decoration: none;
+  transition: top .2s var(--ease);
+}
+.skip-link:focus-visible { top: 1rem; }
+
+/* ---------- Type ---------- */
+h1, h2, h3, h4 {
+  font-family: var(--font-head);
+  font-weight: 400;
+  color: var(--ink);
+  line-height: 1.12;
+  letter-spacing: .005em;
+  text-wrap: balance;
+}
+h1 { font-size: clamp(2.5rem, 5.5vw, 4.25rem); }
+h2 { font-size: clamp(1.9rem, 3.6vw, 2.9rem); }
+h3 { font-size: clamp(1.3rem, 2vw, 1.6rem); }
+
+.lead { font-size: clamp(1.1rem, 1.4vw, 1.25rem); color: var(--ink-2); }
+.small { font-size: .9rem; }
+
+.eyebrow {
+  display: inline-flex; align-items: center; gap: .8rem;
+  font-size: .78rem; font-weight: 700;
+  letter-spacing: .22em; text-transform: uppercase;
+  color: var(--olive); margin-bottom: 1.1rem;
+}
+.eyebrow::before {
+  content: ""; width: 2.2rem; height: 1px; background: var(--gold);
+}
+
+.script {
+  font-family: var(--font-script);
+  font-size: clamp(1.9rem, 3.2vw, 2.8rem);
+  line-height: 1.25;
+  color: var(--olive);
+  letter-spacing: .01em;
+}
+
+p + p { margin-top: 1rem; }
+
+.prose p { margin-top: 1.1rem; }
+.prose p:first-child { margin-top: 0; }
+
+/* ---------- Layout ---------- */
+.container {
+  width: 100%; max-width: 1200px; margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+.container--narrow { max-width: 820px; }
+
+section { padding: clamp(4rem, 9vw, 7.5rem) 0; }
+
+.split {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: clamp(2.5rem, 5vw, 5rem); align-items: center;
+}
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s-4); }
+.grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--s-4); }
+
+@media (max-width: 860px) {
+  .split, .grid-3, .grid-2 { grid-template-columns: 1fr; }
+}
+
+/* ---------- Phones: a card grid becomes a swipe rail ----------
+   Four stacked cards is four screens of scrolling for what is one idea.
+   As a rail it is one screen, and the sliver of the next card IS the
+   affordance, so no dots and no arrows are needed.
+   ⚠️ It has to bleed past the container gutter or card 1 starts inset and
+   the rail reads as a cropped box. Breaking out needs the matching
+   scroll-padding-inline back, or the snap lands card 1 flush on the
+   screen edge. ⚠️ snap-align is START: center opens the rail on card 2. */
+@media (max-width: 860px) {
+  .rail-mobile {
+    display: flex; gap: var(--s-3);
+    margin-inline: calc(var(--gutter) * -1);
+    padding-inline: var(--gutter);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--gutter);
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .rail-mobile::-webkit-scrollbar { display: none; }
+  .rail-mobile > * {
+    flex: 0 0 min(76%, 310px);
+    scroll-snap-align: start;
+  }
+  /* flex stretches them, so every card is as tall as the tallest: the rail
+     reads as one band rather than a ragged row */
+  .rail-mobile > .panel { display: flex; flex-direction: column; }
+  .rail-mobile > .panel > .mt-2:last-child { margin-top: auto; padding-top: 1rem; }
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: .6rem;
+  padding: 1rem 2.1rem;
+  border-radius: 0; border: 1.5px solid var(--olive);
+  background: var(--olive); color: var(--bg);
+  font-size: .8rem; font-weight: 700;
+  letter-spacing: .14em; text-transform: uppercase;
+  text-decoration: none; white-space: nowrap;
+  transition: background .25s var(--ease), border-color .25s var(--ease), color .25s var(--ease), transform .25s var(--ease);
+  min-height: 44px;
+}
+.btn:hover { background: var(--olive-deep); border-color: var(--olive-deep); transform: translateY(-2px); }
+
+.btn--ghost { background: transparent; color: var(--olive); }
+.btn--ghost:hover { background: var(--olive); color: var(--bg); }
+
+.btn--light { background: var(--bg); border-color: var(--bg); color: var(--olive); }
+.btn--light:hover { background: var(--surface); border-color: var(--surface); }
+
+.btn--outline-light { background: transparent; border-color: var(--bg); color: var(--bg); }
+.btn--outline-light:hover { background: var(--bg); color: var(--olive); }
+
+.link-arrow {
+  display: inline-flex; align-items: center; gap: .6rem;
+  font-weight: 700; letter-spacing: .1em; text-transform: uppercase; font-size: .8rem;
+  color: var(--olive); text-decoration: none;
+  border-bottom: 1px solid var(--gold); padding-bottom: .35rem;
+  transition: gap .25s var(--ease);
+}
+.link-arrow:hover { gap: 1rem; }
+
+/* ---------- Header ----------
+   Transparent over the hero, solid ivory once scrolled or when the
+   mobile panel is open. .site-header--solid forces the solid state
+   (pages without a photo hero). */
+.site-header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  background: transparent;
+  border-bottom: 1px solid rgba(245, 240, 230, .22);
+  transition: background .35s var(--ease), border-color .35s var(--ease);
+}
+/* Solid, and no backdrop-filter. It was 96% ivory over a blur, so the
+   HERO PHOTO was bleeding through at 4%, and a backdrop-filter samples
+   what is painted behind it, which the compositor updates a frame late
+   while you scroll. That reads as a photo ghosting under the bar. The
+   blur was doing almost nothing at 96% opacity anyway. */
+.site-header.is-scrolled,
+.site-header.nav-open,
+.site-header--solid {
+  background: var(--bg);
+  border-bottom-color: var(--border);
+}
+
+.header-inner {
+  display: flex; align-items: center;
+  min-height: var(--header-h);
+}
+
+/* Brand */
+.brand {
+  display: inline-flex; align-items: center; gap: .8rem;
+  text-decoration: none; flex: 0 0 auto;
+}
+.brand-dove { width: 40px; height: auto; }
+.brand-text { display: flex; flex-direction: column; }
+.brand-name {
+  font-family: var(--font-script);
+  font-size: 1.45rem; line-height: 1; white-space: nowrap;
+  color: var(--bg);
+  transition: color .35s var(--ease);
+}
+.brand-tag {
+  font-family: var(--font-body); font-size: .55rem;
+  font-weight: 700; letter-spacing: .42em; text-transform: uppercase;
+  white-space: nowrap; margin-top: .45rem;
+  color: rgba(245, 240, 230, .85);
+  transition: color .35s var(--ease);
+}
+.brand-dove--light { display: block; }
+.brand-dove--dark { display: none; }
+.is-scrolled .brand-dove--light, .nav-open .brand-dove--light, .site-header--solid .brand-dove--light { display: none; }
+.is-scrolled .brand-dove--dark, .nav-open .brand-dove--dark, .site-header--solid .brand-dove--dark { display: block; }
+.is-scrolled .brand-name, .nav-open .brand-name, .site-header--solid .brand-name { color: var(--olive); }
+.is-scrolled .brand-tag, .nav-open .brand-tag, .site-header--solid .brand-tag { color: var(--gold-deep); }
+
+/* ---------- Header: tall at the top, shrinks on scroll ----------
+   The compact size is the resting truth: every offset (--header-h,
+   scroll-padding-top) is measured against it, and reduced motion and
+   JS-off both land there. The expanded state is an enhancement that
+   only exists at scrollY 0 with motion allowed. */
+@media (prefers-reduced-motion: no-preference) {
+  .header-inner { transition: min-height .55s var(--ease); }
+  .brand-dove { transition: width .55s var(--ease); }
+  .brand-name { transition: color .35s var(--ease), font-size .55s var(--ease); }
+  .brand-tag { transition: color .35s var(--ease), font-size .55s var(--ease), letter-spacing .55s var(--ease); }
+  .primary-nav a { transition: color .35s var(--ease), font-size .55s var(--ease); }
+  .primary-nav ul { transition: gap .55s var(--ease); }
+  .btn--nav, .quick-exit { transition: padding .55s var(--ease), font-size .55s var(--ease), background .25s var(--ease), border-color .25s var(--ease), color .25s var(--ease), transform .25s var(--ease); }
+
+  .site-header--top .header-inner { min-height: var(--header-h-lg); }
+  .site-header--top .brand-dove { width: 52px; }
+  .site-header--top .brand-name { font-size: 1.72rem; }
+  .site-header--top .brand-tag { font-size: .6rem; letter-spacing: .46em; }
+  .site-header--top .primary-nav a { font-size: .78rem; }
+  .site-header--top .primary-nav ul { gap: clamp(1.3rem, 2vw, 2.3rem); }
+  .site-header--top .btn--nav { padding: .85rem 1.9rem; font-size: .76rem; }
+  .site-header--top .quick-exit { padding: .72rem 1.15rem; font-size: .7rem; }
+
+  /* A phone has no room for the tall bar, and the burger panel needs the
+     compact one so the drawer starts where it always does. */
+  @media (max-width: 1150px) {
+    .site-header--top .header-inner { min-height: 90px; }
+    .site-header--top .brand-dove { width: 46px; }
+    .site-header--top .brand-name { font-size: 1.58rem; }
+  }
+}
+
+/* Links, centered between brand and actions */
+.primary-nav { flex: 1 1 auto; display: flex; justify-content: center; padding: 0 2rem; }
+.primary-nav ul { display: flex; align-items: center; gap: clamp(1.1rem, 1.7vw, 1.95rem); list-style: none; }
+.primary-nav a {
+  position: relative; white-space: nowrap;
+  font-size: .72rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase;
+  color: rgba(245, 240, 230, .92); text-decoration: none; padding: .5rem 0;
+  transition: color .35s var(--ease);
+}
+.primary-nav a::after {
+  content: ""; position: absolute; left: 0; right: 100%; bottom: 0;
+  height: 1px; background: var(--gold);
+  transition: right .3s var(--ease);
+}
+.primary-nav a:hover::after, .primary-nav a[aria-current="page"]::after { right: 0; }
+.primary-nav a:hover { color: var(--bg); }
+.is-scrolled .primary-nav a, .nav-open .primary-nav a, .site-header--solid .primary-nav a { color: var(--ink-2); }
+.is-scrolled .primary-nav a:hover, .site-header--solid .primary-nav a:hover { color: var(--olive); }
+.is-scrolled .primary-nav a[aria-current="page"], .site-header--solid .primary-nav a[aria-current="page"] { color: var(--olive); }
+
+/* Right actions */
+.header-actions { display: flex; align-items: center; gap: .9rem; flex: 0 0 auto; margin-left: 1.5rem; }
+.btn--nav {
+  padding: .7rem 1.6rem; font-size: .72rem; min-height: 40px;
+}
+.quick-exit {
+  border: 1px solid rgba(245, 240, 230, .6); background: transparent;
+  color: var(--bg);
+  font-size: .66rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+  padding: .7rem 1rem; border-radius: 0; min-height: 40px; white-space: nowrap;
+  transition: background .2s, color .2s, border-color .35s var(--ease);
+}
+.quick-exit:hover { background: var(--bg); color: var(--ink); }
+.is-scrolled .quick-exit, .nav-open .quick-exit, .site-header--solid .quick-exit {
+  border-color: rgba(52, 54, 46, .45); color: var(--ink);
+}
+.is-scrolled .quick-exit:hover, .site-header--solid .quick-exit:hover { background: var(--ink); color: var(--bg); }
+
+.site-header :focus-visible { outline-color: var(--bg); }
+.site-header.is-scrolled :focus-visible, .site-header.nav-open :focus-visible, .site-header--solid :focus-visible { outline-color: var(--olive); }
+
+/* Toggle */
+.nav-toggle {
+  display: none; background: none; border: 1px solid rgba(245, 240, 230, .6);
+  width: 44px; height: 44px; border-radius: 0; margin-left: .9rem;
+  flex-direction: column; align-items: center; justify-content: center; gap: 5px;
+  transition: border-color .35s var(--ease);
+}
+.nav-toggle span {
+  display: block; width: 20px; height: 2px; background: var(--bg);
+  transition: transform .25s var(--ease), opacity .2s, background .35s var(--ease);
+}
+.is-scrolled .nav-toggle, .nav-open .nav-toggle, .site-header--solid .nav-toggle { border-color: var(--olive); }
+.is-scrolled .nav-toggle span, .nav-open .nav-toggle span, .site-header--solid .nav-toggle span { background: var(--olive); }
+.nav-toggle[aria-expanded="true"] span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav-toggle[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+.nav-toggle[aria-expanded="true"] span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+@media (max-width: 1150px) {
+  .nav-toggle { display: inline-flex; }
+  .header-actions .btn--nav { display: none; }
+  .header-actions { margin-left: auto; }
+  .primary-nav {
+    position: absolute; top: 100%; left: 0; right: 0; display: block;
+    background: var(--surface); border-bottom: 1px solid var(--border);
+    padding: 1.25rem clamp(1.25rem, 4.5vw, 3rem) 1.75rem;
+  }
+  .primary-nav[hidden] { display: none; }
+  .primary-nav ul { flex-direction: column; align-items: stretch; gap: .25rem; }
+  .primary-nav a { display: block; padding: .85rem .25rem; font-size: .9rem; color: var(--ink-2); }
+  .primary-nav a::after { display: none; }
+  .primary-nav a[aria-current="page"] { color: var(--olive); }
+  .primary-nav .nav-give-mobile { margin-top: 1rem; }
+  .primary-nav .nav-give-mobile a {
+    display: inline-flex; background: var(--olive); color: var(--bg);
+    padding: .85rem 1.8rem; letter-spacing: .14em;
+  }
+}
+/* ==========================================================
+   Mobile menu: full screen, opens as a circle out of the burger
+   ==========================================================
+   Gated on .js. Without JS the plain drawer above still applies, so a
+   scripting-off phone never gets a full-screen sheet stuck open.
+
+   The header keeps z-index 200 and this sits INSIDE it at z-index 1,
+   with the brand, Quick Exit and the burger lifted to 2. On this site
+   that is not a nicety: Quick Exit is the escape hatch and it has to
+   stay reachable every second the menu is up. */
+@media (max-width: 1150px) {
+  .js .primary-nav {
+    position: fixed; inset: 0; z-index: 1;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: calc(var(--header-h) + 1.25rem) clamp(1.5rem, 7vw, 3rem) 2.25rem;
+    border-bottom: 0;
+    overflow-y: auto; overscroll-behavior: contain;
+    background:
+      radial-gradient(135% 52% at 50% 100%, rgba(201, 160, 92, .22), rgba(201, 160, 92, 0) 62%),
+      linear-gradient(158deg, #4C4E33 0%, #3B3D2C 48%, #2E3028 100%);
+    /* the circle grows from the burger's own centre; JS writes --mx/--my/--mr */
+    clip-path: circle(0px at var(--mx, 100%) var(--my, 38px));
+    visibility: hidden;
+    /* ⚠️ No transition until JS arms it. Declared here, the jump from the
+       pre-.js visible drawer to hidden RUNS the `visibility 0s .72s` delay,
+       so the closed menu stays visibility:visible (and its 8 links stay in
+       the tab order) for the first 720ms of every page load. */
+    transition: none;
+  }
+  .js .primary-nav.nav-ready {
+    transition: clip-path .72s cubic-bezier(.76, 0, .24, 1), visibility 0s .72s;
+  }
+  /* visibility, not clip alone: an invisible full-screen layer still eats taps */
+  .js .primary-nav:not(.is-open) { pointer-events: none; }
+  .js .primary-nav[hidden] { display: flex; }
+  .js .primary-nav.is-open {
+    clip-path: circle(var(--mr, 160vmax) at var(--mx, 100%) var(--my, 38px));
+    visibility: visible;
+  }
+  .js .primary-nav.nav-ready.is-open {
+    transition: clip-path .85s cubic-bezier(.76, 0, .24, 1), visibility 0s 0s;
+  }
+
+  .js .primary-nav ul {
+    counter-reset: navi;
+    flex-direction: column; align-items: stretch; gap: 0;
+    width: 100%; max-width: 30rem; margin: 0 auto;
+  }
+  .js .primary-nav li {
+    counter-increment: navi;
+    border-top: 1px solid rgba(245, 240, 230, .13);
+    margin: 0;
+  }
+  .js .primary-nav li:last-child { border-bottom: 1px solid rgba(245, 240, 230, .13); }
+
+  .js .primary-nav a,
+  .js .primary-nav .nav-give-mobile a {
+    display: flex; align-items: baseline; gap: .9rem;
+    background: none; padding: .58rem .1rem;
+    font-family: var(--font-head); font-weight: 400;
+    font-size: clamp(1.7rem, 8vw, 2.6rem); line-height: 1.2;
+    letter-spacing: 0; text-transform: none;
+    color: var(--ondark);
+  }
+  /* 01..08. #E3C489 not --gold-ondark: the darker gold measures 3.5:1 on this
+     bed, which is fine for display type and NOT for a .68rem number. */
+  .js .primary-nav a::before {
+    content: counter(navi, decimal-leading-zero);
+    flex: 0 0 auto;
+    font-family: var(--font-body); font-size: .66rem; font-weight: 700;
+    letter-spacing: .2em; color: #E3C489;
+  }
+  .js .primary-nav a[aria-current="page"] { color: #E3C489; }
+
+  /* the word, letter by letter. No overflow clip: these labels have
+     descenders (Programs, Giving) and a clip would slice them. */
+  .js .primary-nav .nav-word { display: inline-block; }
+  .js .primary-nav .ltr {
+    display: inline-block; white-space: pre;
+    transform: translateY(.55em); opacity: 0;
+    transition: transform .72s var(--ease), opacity .5s var(--ease);
+    transition-delay: var(--ld, 0s);
+  }
+  .js .primary-nav.is-open .ltr { transform: none; opacity: 1; }
+
+  /* header chrome while the menu is up: transparent over the olive,
+     light logo, light burger. These override the .nav-open rules that
+     make the bar solid ivory, so they must out-specify them. */
+  .site-header.nav-open { background: transparent; border-bottom-color: rgba(245, 240, 230, .18); }
+  .site-header.nav-open .brand,
+  .site-header.nav-open .header-actions,
+  .site-header.nav-open .nav-toggle { position: relative; z-index: 2; }
+  .site-header.nav-open .brand-dove--light { display: block; }
+  .site-header.nav-open .brand-dove--dark { display: none; }
+  .site-header.nav-open .brand-name { color: var(--bg); }
+  .site-header.nav-open .brand-tag { color: rgba(245, 240, 230, .85); }
+  .site-header.nav-open .nav-toggle { border-color: rgba(245, 240, 230, .6); }
+  .site-header.nav-open .nav-toggle span { background: var(--bg); }
+  .site-header.nav-open .quick-exit { border-color: rgba(245, 240, 230, .6); color: var(--bg); }
+  .site-header.nav-open .quick-exit:hover { background: var(--bg); color: var(--ink); }
+  .site-header.nav-open :focus-visible { outline-color: var(--bg); }
+}
+
+@media (max-width: 1150px) and (prefers-reduced-motion: reduce) {
+  /* no circle, no letter wave. visibility still does the hiding, and the
+     delayed visibility transition has to go or the sheet lingers on close. */
+  .js .primary-nav, .js .primary-nav.nav-ready, .js .primary-nav.nav-ready.is-open { transition: none; clip-path: none; }
+  .js .primary-nav .ltr { transform: none; opacity: 1; transition: none; }
+}
+
+/* ---------- Phones: the brand has to yield ----------
+   The bar carries brand + dove + Quick Exit + burger, and the script
+   wordmark is wide. Measured at the top-of-page (tall) state: the gap
+   between the brand and Quick Exit was 5.8px at 390 and 0 at 360 and
+   320, where the burger also ran 22px past the right edge. Both the
+   resting and the --top sizes shrink, or the collision just comes back
+   the moment the page is scrolled to the top.
+   Placed after the --top block on purpose: same specificity, later wins. */
+@media (max-width: 480px) {
+  .brand { gap: .55rem; }
+  .brand-dove { width: 32px; }
+  .brand-name { font-size: 1.1rem; }
+  .brand-tag { font-size: .48rem; letter-spacing: .28em; margin-top: .3rem; }
+  .header-actions { gap: .5rem; }
+  .quick-exit { padding: .68rem .78rem; font-size: .6rem; letter-spacing: .1em; }
+  .nav-toggle { margin-left: .5rem; width: 42px; height: 42px; }
+  /* Quick Exit and the burger sit side by side: same height or the row reads crooked */
+  .quick-exit { min-height: 42px; }
+}
+@media (max-width: 480px) and (prefers-reduced-motion: no-preference) {
+  .site-header--top .brand-dove { width: 36px; }
+  .site-header--top .brand-name { font-size: 1.18rem; }
+  .site-header--top .brand-tag { font-size: .5rem; letter-spacing: .3em; }
+  .site-header--top .quick-exit { padding: .7rem .82rem; font-size: .62rem; }
+}
+
+/* 320 is the floor. At 480's sizes the gap there was still only 9.9px. */
+@media (max-width: 359px) {
+  .brand-dove { width: 28px; }
+  .brand-name { font-size: .98rem; }
+  .brand-tag { font-size: .44rem; letter-spacing: .24em; }
+  .quick-exit { padding: .68rem .6rem; font-size: .56rem; }
+}
+@media (max-width: 359px) and (prefers-reduced-motion: no-preference) {
+  .site-header--top .brand-dove { width: 30px; }
+  .site-header--top .brand-name { font-size: 1.02rem; }
+  .site-header--top .brand-tag { font-size: .45rem; letter-spacing: .25em; }
+  .site-header--top .quick-exit { padding: .7rem .64rem; font-size: .58rem; }
+}
+
+@media (min-width: 1151px) {
+  .primary-nav .nav-give-mobile { display: none; }
+
+  /* Three-column grid so the links sit on the true page centre, not on the
+     centre of whatever space the brand and the buttons happen to leave.
+     The header also gets a wider track than the 1200px body container,
+     because brand + 7 links + 2 buttons overflowed 1200 and shoved the
+     whole row to the right. */
+  .header-inner {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    max-width: 1460px;
+  }
+  .brand { justify-self: start; }
+  .primary-nav { padding: 0 1.5rem; }
+  .header-actions { justify-self: end; margin-left: 0; }
+}
+
+/* ---------- Hero ---------- */
+.hero {
+  position: relative; min-height: 100svh; display: flex; align-items: flex-end;
+  padding: 0; overflow: hidden;
+  /* Dark bed under every full-bleed photo.
+     The media inside is transformed (parallax), so it composites on its own
+     layer and the clip edge can land on a fraction of a device pixel. Whatever
+     shows through that hairline used to be the ivory page background: a 1px
+     ivory line down the right edge of the hero, full height, at some device
+     pixel ratios. Now the only thing behind the photo is the same dark it sits
+     on. It also means a photo that fails to load degrades to light-on-dark
+     instead of white text on ivory. */
+  background: var(--dark);
+}
+.hero--short { min-height: 100svh; }
+.hero__media { position: absolute; inset: 0; background: var(--dark); }
+.hero__media img { width: 100%; height: 100%; object-fit: cover; }
+.hero__scrim {
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(to bottom, rgba(28, 30, 22, .58) 0%, rgba(28, 30, 22, 0) 24%),
+    linear-gradient(to top, rgba(28, 30, 22, .82) 0%, rgba(28, 30, 22, .38) 45%, rgba(28, 30, 22, .18) 100%),
+    rgba(28, 30, 22, .18);
+}
+.hero__content {
+  position: relative; z-index: 2; width: 100%;
+  padding: calc(var(--header-h) + 4rem) 0 clamp(3.5rem, 8vw, 6rem);
+  color: var(--bg);
+}
+.hero .script { color: #E9DFC8; font-size: clamp(2.1rem, 3.6vw, 3.2rem); }
+.hero h1 { color: #FDFBF6; max-width: 15ch; margin: .75rem 0 1.25rem; }
+.hero p.lead { color: rgba(253, 251, 246, .92); max-width: 52ch; }
+.hero__actions { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 2.25rem; }
+.hero__actions .btn { border-width: 1.5px; }
+
+/* ---------- Botanical divider ---------- */
+.leaf-divider {
+  display: flex; justify-content: center; padding: 0 0 .25rem;
+}
+.leaf-divider svg { width: 84px; height: auto; color: var(--gold); }
+
+/* ---------- Cards / panels ---------- */
+.panel {
+  background: var(--surface);
+  padding: clamp(1.75rem, 3vw, 2.5rem);
+}
+.panel h3 { margin-bottom: .6rem; }
+.panel .num {
+  font-family: var(--font-head); font-size: 1rem; color: var(--gold-deep);
+  letter-spacing: .18em; display: block; margin-bottom: 1rem;
+}
+
+.figure-frame { position: relative; }
+.figure-frame img { width: 100%; height: auto; }
+
+/* Blur-up: the container carries a 20px base64 twin of the photo, so the
+   frame is never an empty box. Scaled up by the browser it reads as a soft
+   colour field, and the real file fades in over it once decoded. */
+.figure-frame, .hero__media, .band-media {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: var(--sand);
+}
+.band-media { background-color: var(--dark); }
+.video-item .frame { background: var(--sand); }
+
+/* The load-in. The blur twin is already painted underneath at the right
+   colour and shape, so the real file only has to resolve over it: a short
+   cross-fade, no wipe, no zoom, no hard edge. Default state is fully
+   visible, so the class can only ever add the transition, never strand. */
+.hero__media img, .band-media img, .figure-frame img {
+  transition: opacity .4s linear;
+}
+.js .hero__media img.img-pending,
+.js .band-media img.img-pending,
+.js .figure-frame img.img-pending { opacity: 0; }
+.figure-frame::after {
+  content: ""; position: absolute; inset: 14px;
+  border: 1px solid rgba(245, 240, 230, .55); pointer-events: none;
+}
+
+/* ---------- Scripture / dark band ---------- */
+.band-dark {
+  position: relative; background: var(--dark); color: var(--ondark);
+  padding: clamp(4.5rem, 9vw, 7.5rem) 0;
+}
+.band-dark h2, .band-dark h3 { color: var(--ondark); }
+.band-dark .script { color: var(--gold-ondark); }
+.band-dark .band-media { position: absolute; inset: 0; overflow: hidden; background: var(--dark); }
+.band-dark .band-media img { width: 100%; height: 100%; object-fit: cover; opacity: .38; }
+.band-dark .band-media::after {
+  content: ""; position: absolute; inset: 0; z-index: 1;
+  background: linear-gradient(rgba(30, 32, 24, .55), rgba(30, 32, 24, .78));
+}
+.band-dark .container { position: relative; z-index: 2; }
+.band-dark blockquote {
+  font-family: var(--font-head);
+  font-size: clamp(1.25rem, 2.2vw, 1.7rem);
+  line-height: 1.55; max-width: 46ch; margin: 0 auto;
+}
+.band-dark cite {
+  display: block; font-style: normal; font-family: var(--font-body);
+  font-size: .82rem; font-weight: 700; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--gold-ondark); margin-top: 1.75rem;
+}
+
+/* ---------- Alt band ---------- */
+.band-sand { background: var(--sand); }
+.band-surface { background: var(--surface); }
+
+/* ---------- Light CTA band (Jessie: keep it soft, not too much dark) ---------- */
+.band-cta {
+  background: var(--sand);
+  border-top: 1px solid rgba(179, 138, 72, .35);
+  border-bottom: 1px solid rgba(179, 138, 72, .35);
+}
+.band-cta .script { color: var(--gold-deep); }
+
+/* ---------- Blog / post cards ---------- */
+.post-card { background: var(--surface); padding: clamp(1.75rem, 3vw, 2.5rem); }
+.post-card time { font-size: .8rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--gold-deep); }
+
+/* ---------- Phases (Investors) ---------- */
+.phase { display: grid; grid-template-columns: 110px 1fr; gap: 1.5rem; padding: 2rem 0; border-top: 1px solid var(--border); }
+.phase:last-of-type { border-bottom: 1px solid var(--border); }
+.phase .phase-num { font-family: var(--font-head); font-size: 1rem; letter-spacing: .18em; text-transform: uppercase; color: var(--gold-deep); }
+.phase h3 { margin-bottom: .35rem; }
+.phase .phase-when { font-size: .82rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); display: block; margin-bottom: .75rem; }
+@media (max-width: 640px) { .phase { grid-template-columns: 1fr; gap: .5rem; } }
+
+.note-strip {
+  background: var(--surface); border-left: 3px solid var(--gold);
+  padding: 1.1rem 1.4rem; font-size: .95rem; color: var(--ink-2);
+}
+
+/* ---------- Allies ---------- */
+.allies-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: var(--s-4); align-items: center;
+  max-width: 900px; margin-left: auto; margin-right: auto;
+}
+.allies-grid a {
+  display: flex; align-items: center; justify-content: center;
+  padding: 1.25rem 1rem; background: var(--surface);
+  min-height: 110px;
+}
+.allies-grid img { max-height: 64px; width: auto; filter: grayscale(28%); transition: filter .25s; }
+.allies-grid a:hover img { filter: none; }
+@media (max-width: 640px) { .allies-grid { grid-template-columns: 1fr; } }
+
+/* ---------- Lists ---------- */
+.check-list { display: grid; gap: .65rem; margin-top: 1.25rem; }
+.check-list li { display: flex; gap: .8rem; align-items: flex-start; }
+.check-list svg { flex: 0 0 auto; width: 18px; height: 18px; margin-top: .35rem; color: var(--gold-deep); }
+
+/* ---------- Videos ---------- */
+.video-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-4); }
+@media (max-width: 860px) { .video-grid { grid-template-columns: 1fr; } }
+.video-item { background: var(--surface); }
+.video-item .frame { position: relative; aspect-ratio: 16 / 9; }
+.video-item iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.video-item figcaption { padding: 1.1rem 1.25rem 1.3rem; }
+.video-item figcaption strong { font-family: var(--font-head); font-weight: 400; font-size: 1.05rem; display: block; }
+.video-item figcaption span { color: var(--muted); font-size: .88rem; }
+
+/* ---------- Forms ---------- */
+form { display: grid; gap: 1.15rem; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.15rem; }
+@media (max-width: 640px) { .form-row { grid-template-columns: 1fr; } }
+
+label, legend {
+  font-size: .8rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--ink-2); display: block; margin-bottom: .45rem;
+}
+fieldset { border: 0; }
+fieldset legend { margin-bottom: .75rem; }
+
+input[type="text"], input[type="email"], input[type="tel"], select, textarea {
+  width: 100%; padding: .9rem 1rem;
+  border: 1.5px solid rgba(52, 54, 46, .38);
+  background: var(--surface); color: var(--ink);
+  font: inherit; border-radius: 0;
+}
+input:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: 2px solid var(--olive); outline-offset: 2px; border-color: var(--olive);
+}
+::placeholder { color: #77796A; opacity: 1; }
+
+.choice-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem .9rem; }
+@media (max-width: 640px) { .choice-grid { grid-template-columns: 1fr; } }
+.choice {
+  display: flex; align-items: center; gap: .65rem;
+  font-size: 1rem; font-weight: 400; letter-spacing: 0; text-transform: none;
+  color: var(--ink); margin: 0; cursor: pointer; padding: .35rem 0;
+}
+.choice input { width: 20px; height: 20px; accent-color: var(--olive); }
+
+.form-note { font-size: .88rem; color: var(--muted); }
+.form-status { font-weight: 700; color: var(--olive-deep); }
+
+/* ---------- Footer ----------
+   One signature moment: dawn breaks behind the footer as it scrolls in,
+   and the wordmark writes itself on across the full width. Everything
+   else is content. The hotline card stays the loudest thing here, so
+   the glow is tuned to peak BEHIND the wordmark and fall off before it
+   reaches any body text. Contrast measured against the lit state.
+   ------------------------------------------------------------------ */
+.site-footer {
+  position: relative; isolation: isolate; overflow: clip;
+  background: var(--dark); color: var(--ondark-2);
+  padding: clamp(3.5rem, 7vw, 5.5rem) 0 2rem;
+  font-size: .95rem;
+}
+.site-footer a { color: var(--ondark); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(245,240,230,.4); }
+.site-footer a:hover { text-decoration-color: var(--gold-ondark); color: var(--gold-ondark); }
+
+/* the dawn layer: a true background, never an overlay */
+.footer__dawn { position: absolute; inset: 0; z-index: -1; pointer-events: none; overflow: clip; }
+.footer__glow {
+  position: absolute; left: 50%; bottom: -6%;
+  width: 165%; aspect-ratio: 2 / 1;
+  transform: translate(-50%, 0);
+  background: radial-gradient(ellipse at 50% 100%,
+      rgba(201,160,92,.24) 0%,
+      rgba(201,160,92,.12) 30%,
+      rgba(181,139,96,.055) 52%,
+      rgba(46,48,40,0) 72%);
+}
+
+/* ---- lede: the verse and the signup ---- */
+.footer-lede {
+  display: grid; grid-template-columns: 1.35fr 1fr;
+  gap: clamp(2rem, 5vw, 4.5rem); align-items: start;
+  padding-bottom: clamp(2.25rem, 4.5vw, 3.25rem);
+  margin-bottom: clamp(2.25rem, 4.5vw, 3.25rem);
+  border-bottom: 1px solid rgba(245, 240, 230, .14);
+}
+@media (max-width: 900px) { .footer-lede { grid-template-columns: 1fr; } }
+
+.footer-verse { position: relative; padding-left: 1.5rem; }
+.footer-verse::before {
+  content: ""; position: absolute; left: 0; top: .35em; bottom: .35em; width: 2px;
+  background: linear-gradient(180deg, var(--gold-ondark), rgba(201,160,92,0));
+}
+.footer-verse p {
+  font-family: var(--font-head); color: var(--ondark);
+  font-size: clamp(1.2rem, 2.3vw, 1.75rem); line-height: 1.45; max-width: 28ch;
+}
+.footer-verse cite {
+  display: block; margin-top: 1rem; font-style: normal;
+  font-family: var(--font-body); font-size: .72rem; font-weight: 700;
+  letter-spacing: .24em; text-transform: uppercase; color: var(--gold-ondark);
+}
+
+.footer-signup p { max-width: 40ch; margin-bottom: 1.1rem; }
+.signup__row { display: flex; align-items: stretch; gap: .5rem; max-width: 430px; }
+.signup input {
+  flex: 1; min-width: 0; font: inherit; font-family: var(--font-body);
+  background: rgba(245, 240, 230, .06); color: var(--ondark);
+  border: 1px solid rgba(245, 240, 230, .3);
+  padding: .82rem 1rem;
+}
+.signup input::placeholder { color: rgba(198, 200, 184, .68); }
+.signup input:focus { outline: none; border-color: var(--gold-ondark); background: rgba(245, 240, 230, .1); }
+.signup .btn { padding: .82rem 1.4rem; white-space: nowrap; }
+/* One height for both, so the field and the button read as one control.
+   The input inherits the .95rem body size and the button is .8rem caps,
+   so their content boxes are different: without this the two ends of the
+   row drift apart by a few px and it looks unfinished. */
+.signup input, .signup .btn { min-height: 52px; }
+.site-footer .form-status { color: var(--gold-ondark); font-weight: 500; font-size: .85rem; margin-top: .7rem; }
+/* the live region reserves a line even when it has nothing to say. :empty is
+   live, so it reappears the moment the form writes into it. */
+.site-footer .form-status:empty { display: none; }
+
+/* ---- the columns ---- */
+.footer-grid {
+  display: grid; grid-template-columns: 1.4fr 1fr 1fr 1.2fr;
+  gap: var(--s-6); padding-bottom: var(--s-6);
+  border-bottom: 1px solid rgba(245, 240, 230, .16);
+}
+@media (max-width: 1020px) { .footer-grid { grid-template-columns: 1fr 1fr; } }
+/* Phones: Quick Links and Get in Touch share one row instead of stacking,
+   which is the single biggest cut to footer height. Brand and the hotline
+   card stay full width, the hotline because it must never be a half-width
+   afterthought on the page a survivor is most likely to be reading. */
+@media (max-width: 640px) {
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 2.25rem 1.5rem; }
+  .footer-brand, .footer-help { grid-column: 1 / -1; }
+  .footer-grid nav, .footer-contact { min-width: 0; }
+  /* the email is longer than a half-width column and will not break on its own */
+  .footer-links li { margin-bottom: .45rem; }
+  .footer-lede { padding-bottom: 1.9rem; margin-bottom: 1.9rem; }
+  /* half a column is narrower than the address, so break it after the @
+     (the <wbr> in the markup) rather than mid-word */
+  .footer-email { word-break: normal; overflow-wrap: normal; }
+}
+
+.footer-brand img { width: 86px; height: auto; margin-bottom: 1.1rem; }
+.footer-brand p { max-width: 34ch; }
+
+.site-footer h2 {
+  font-size: .78rem; font-weight: 700; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--gold-ondark); font-family: var(--font-body); margin-bottom: 1.1rem;
+}
+
+/* link rows: the label steps right, a gold hairline draws in under it */
+.footer-links li { margin-bottom: .55rem; }
+.footer-links a {
+  position: relative; display: inline-block; text-decoration: none; padding-bottom: 3px;
+}
+.footer-links a span { display: inline-block; transition: transform .4s var(--ease); }
+.footer-links a::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px;
+  background: var(--gold-ondark); transform: scaleX(0); transform-origin: 0 50%;
+  transition: transform .45s var(--ease);
+}
+.footer-links a:hover span, .footer-links a:focus-visible span { transform: translateX(4px); }
+.footer-links a:hover::after, .footer-links a:focus-visible::after { transform: scaleX(1); }
+@media (prefers-reduced-motion: reduce) {
+  .footer-links a span, .footer-links a::after { transition: none; }
+}
+
+.footer-contact address { font-style: normal; }
+.footer-contact a { text-decoration: none; }
+.footer-contact p { margin-top: .5rem; }
+
+.hotline-box {
+  border: 1px solid rgba(201, 160, 92, .55);
+  background: rgba(201, 160, 92, .07);
+  padding: 1.25rem 1.4rem;
+}
+.hotline-box p { margin-top: .55rem; }
+.hotline-box a { font-weight: 700; }
+
+/* ---- the wordmark: it writes itself on ----
+   The name is a real pen stroke, not a wipe. The glyph outline is pulled
+   from the font, its medial axis traced into 26 ordered sub-strokes in
+   writing order (L, then i-v-i-n-g, the two dots, then H-o-p-e), and that
+   polyline is the mask over the gradient fill. Drawing it is a
+   stroke-dashoffset run down each sub-stroke in turn.
+   ⚠️ The dash gap MUST be huge (99999). With a single-value dasharray the
+   pattern repeats, and at the resting offset the round cap paints a dot at
+   every sub-stroke's END: 26 stray specks sitting there through the delay. */
+.footer-signoff { margin-top: clamp(2.25rem, 4.5vw, 3.5rem); }
+.footer-wordmark-clip { width: 100%; }
+.fw { display: block; width: 100%; height: auto; }
+.fw-pen path { stroke-dasharray: var(--l) 99999; stroke-dashoffset: 0; }
+
+.footer-bottom {
+  position: relative;
+  display: flex; flex-wrap: wrap; justify-content: space-between; gap: .75rem;
+  padding-top: 1.5rem; margin-top: 1.25rem; font-size: .82rem; color: var(--ondark-2);
+}
+.footer-bottom::before {
+  content: ""; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, rgba(201,160,92,0), rgba(201,160,92,.5), rgba(201,160,92,0));
+}
+.footer-bottom a { color: var(--ondark-2); }
+
+/* ---- the reveal. JS arms it, so no-JS renders the lit footer. ---- */
+.site-footer.is-armed .footer__glow {
+  opacity: 0; transform: translate(-50%, 12%);
+  transition: opacity 1.5s var(--ease), transform 1.9s var(--ease);
+}
+.site-footer.is-armed .fw-pen path { stroke-dashoffset: var(--l); }
+.site-footer.is-armed .footer-bottom::before {
+  transform: scaleX(0); transform-origin: 50% 50%;
+  transition: transform 1.2s var(--ease) .45s;
+}
+.site-footer.is-armed.is-lit .footer__glow { opacity: 1; transform: translate(-50%, 0); }
+.site-footer.is-armed.is-lit .fw-pen path {
+  animation: fwWrite var(--d) linear var(--t) forwards;
+}
+@keyframes fwWrite { to { stroke-dashoffset: 0; } }
+.site-footer.is-armed.is-lit .footer-bottom::before { transform: scaleX(1); }
+
+/* ============================================================
+   MOTION SYSTEM
+   One ease everywhere. Sticky-first, no scroll library.
+   Everything opts IN to motion; reduced-motion users get the
+   calm page by default. JS-gated so no-JS still renders.
+   ============================================================ */
+
+/* The page slides over a held hero */
+.hero { position: sticky; top: 0; }
+main > section:not(.hero) { position: relative; z-index: 1; }
+main > section:not(.hero):not([class*="band"]) { background: var(--bg); }
+
+/* ---------- The seam sheet ----------
+   The hero is sticky, so anything the sections above it fail to cover
+   shows the hero PHOTO through. Per-section backgrounds are not enough:
+   section heights land on fractional pixels (591.5, 1005.688, 1078.266)
+   and adjacent boxes round independently while scrolling, so a hairline
+   of the photo flashes at the seams. One opaque sheet spanning
+   everything below the hero removes every seam at once.
+   z-index 0 puts it ABOVE the sticky hero (z-index auto) and BELOW the
+   sections (z-index 1), so the hero-hold still reads normally.
+   It starts at 100svh because every hero on this site is min-height 100svh. */
+main { position: relative; }
+main::after {
+  content: ""; position: absolute; left: 0; right: 0;
+  top: 100svh; bottom: 0;
+  background: var(--bg);
+  z-index: 0; pointer-events: none;
+}
+
+/* Hero scroll cue */
+.hero__cue {
+  position: absolute; left: 50%; bottom: 2.2rem; transform: translateX(-50%);
+  z-index: 2; display: flex; flex-direction: column; align-items: center; gap: .7rem;
+  font-size: .62rem; font-weight: 700; letter-spacing: .3em; text-transform: uppercase;
+  color: rgba(245, 240, 230, .8);
+}
+.hero__cue-line {
+  width: 1px; height: 54px;
+  background: linear-gradient(to bottom, var(--gold), transparent);
+}
+/* On a phone the hero copy runs to the bottom edge, so the cue would
+   sit on top of the buttons. The scroll affordance is obvious there. */
+@media (max-width: 900px) { .hero__cue { display: none; } }
+
+@media (prefers-reduced-motion: no-preference) {
+
+  /* Page in, self-completing, cannot strand the page */
+  .js main { animation: page-in 1s var(--ease) both; }
+
+  /* Hero entrance: slow settle on the photo, content rises in sequence */
+  .hero .script { animation: rise 1.1s var(--ease) .25s both; }
+  .hero h1 { animation: rise 1.15s var(--ease) .42s both; }
+  .hero p.lead { animation: rise 1.15s var(--ease) .58s both; }
+  .hero__actions { animation: rise 1.15s var(--ease) .74s both; }
+  .hero__cue { animation: rise 1s var(--ease) 1.2s both; }
+  .hero__cue-line { animation: cue-pulse 2.2s var(--ease) 1.6s 3; transform-origin: top; }
+
+  /* Scroll reveals: 1.35s rise, 30px, staggered 0.14s via --rv-delay */
+  .js [data-reveal] {
+    opacity: 0; transform: translateY(30px);
+    /* `translate` is listed here so the card hover lift keeps a transition:
+       this rule outranks .panel and would otherwise strip it and make the
+       lift snap. Only opacity and transform take the stagger delay. */
+    transition: opacity 1.35s var(--ease), transform 1.35s var(--ease), translate .75s var(--ease);
+    transition-delay: var(--rv-delay, 0s), var(--rv-delay, 0s), 0s;
+  }
+  .js [data-reveal].is-in { opacity: 1; transform: none; }
+
+  /* No wipe, no zoom on photos. A framed image uses the same quiet
+     rise as every other element, and the picture itself simply resolves
+     over its own blur-up twin. See the cross-fade below. */
+
+  /* Photo life on hover */
+  .figure-frame { overflow: hidden; }
+  /* Keep the load cross-fade: a bare transform transition here would
+     replace it and the photo would snap in instead of resolving. */
+  .figure-frame img { transition: opacity .4s linear, transform .9s var(--ease); }
+  .figure-frame:hover img { transform: scale(1.045); }
+
+  /* Panels: lift + gold rule draws across the top */
+  .panel { position: relative; transition: translate .75s var(--ease); }
+  .panel::before {
+    content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: var(--gold); transform: scaleX(0); transform-origin: left;
+    transition: transform .9s var(--ease);
+  }
+  .panel:hover { translate: 0 -5px; }
+  .panel:hover::before { transform: scaleX(1); }
+
+  /* Ally logos rise to color */
+  .allies-grid a { transition: translate .75s var(--ease); }
+  .allies-grid a:hover { translate: 0 -4px; }
+
+  /* Botanical divider draws itself */
+  .leaf-divider path { stroke-dasharray: 130; stroke-dashoffset: 130; }
+  .leaf-divider.is-in path { animation: leaf-draw 1.8s var(--ease) forwards; }
+  .leaf-divider.is-in path:nth-child(2) { animation-delay: .25s; }
+  .leaf-divider.is-in path:nth-child(3) { animation-delay: .5s; }
+
+  /* Parallax layer (JS drives translateY) */
+  .band-media img { will-change: transform; }
+
+  /* ---------- Section cascade ----------
+     A block that opens with an eyebrow no longer arrives as one slab.
+     The block itself only fades; its gold rule draws, then the heading,
+     body and CTA rise in order. JS sets --c-delay per child, so the
+     order follows the markup and new sections inherit it for free.
+     Resting state is VISIBLE: without .is-in nothing is ever stranded,
+     because the only hidden state lives under [data-rv-cascade], which
+     JS adds and the 2.5s sweep always resolves. */
+  .js .rv-nt, .js .rv-nt * { transition: none !important; }
+
+  .js [data-reveal][data-rv-cascade] {
+    transform: none;
+    transition: opacity .55s var(--ease);
+  }
+  .js [data-rv-cascade] > * {
+    opacity: 0; transform: translateY(16px);
+    transition: opacity .85s var(--ease), transform .85s var(--ease);
+    transition-delay: var(--c-delay, 0s);
+  }
+  .js [data-rv-cascade].is-in > * { opacity: 1; transform: none; }
+
+  .js [data-rv-cascade] > .eyebrow::before {
+    transform: scaleX(0); transform-origin: left;
+    transition: transform .8s var(--ease);
+    transition-delay: var(--c-delay, 0s);
+  }
+  .js [data-rv-cascade].is-in > .eyebrow::before { transform: scaleX(1); }
+
+  /* A standalone eyebrow (its own reveal target) draws its rule too. */
+  .js .eyebrow[data-reveal]::before {
+    transform: scaleX(0); transform-origin: left;
+    transition: transform .8s var(--ease);
+    transition-delay: var(--rv-delay, 0s);
+  }
+  .js .eyebrow[data-reveal].is-in::before { transform: scaleX(1); }
+
+  /* ---------- Framed photo: the rule opens on hover ---------- */
+  .figure-frame::after {
+    transition: inset .55s var(--ease), border-color .55s var(--ease);
+  }
+  .figure-frame:hover::after {
+    inset: 8px; border-color: rgba(245, 240, 230, .95);
+  }
+
+  /* ---------- Video cards: same language as .panel ---------- */
+  .video-item { position: relative; transition: translate .75s var(--ease); }
+  .video-item::before {
+    content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px; z-index: 2;
+    background: var(--gold);
+    transform: scaleX(0); transform-origin: left;
+    transition: transform .9s var(--ease);
+  }
+  .video-item:hover { translate: 0 -4px; }
+  .video-item:hover::before { transform: scaleX(1); }
+
+  /* ---------- Buttons: olive sweeps in, gold rule follows ----------
+     The sweep is skipped on .btn--ghost and .btn--outline-light on
+     purpose: those flip their TEXT colour, and a half-swept fill would
+     leave half a word sitting on its own colour. Those two keep the
+     quick crossfade and take the gold rule only. */
+  .btn { position: relative; overflow: hidden; isolation: isolate; --btn-sweep: var(--olive-deep); }
+  .btn--light { --btn-sweep: var(--surface); }
+
+  .btn:not(.btn--ghost):not(.btn--outline-light)::before {
+    content: ""; position: absolute; inset: 0; z-index: -1;
+    background: var(--btn-sweep);
+    transform: scaleX(0); transform-origin: left;
+    transition: transform .45s var(--ease);
+  }
+  .btn:not(.btn--ghost):not(.btn--outline-light):hover::before,
+  .btn:not(.btn--ghost):not(.btn--outline-light):focus-visible::before { transform: scaleX(1); }
+
+  /* Hand the fill to the sweep: the resting colour stays put underneath. */
+  .btn:hover, .btn:focus-visible { background: var(--olive); }
+  .btn--light:hover, .btn--light:focus-visible { background: var(--bg); }
+
+  .btn::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; z-index: 1;
+    background: var(--gold);
+    transform: scaleX(0); transform-origin: left;
+    transition: transform .45s var(--ease) .08s;
+  }
+  .btn:hover::after, .btn:focus-visible::after { transform: scaleX(1); }
+
+  /* ---------- Link arrows: the rule draws under the label ---------- */
+  .link-arrow { position: relative; }
+  .link-arrow::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 1px;
+    background: var(--olive-deep);
+    transform: scaleX(0); transform-origin: left;
+    transition: transform .45s var(--ease);
+  }
+  .link-arrow:hover::after, .link-arrow:focus-visible::after { transform: scaleX(1); }
+}
+
+@keyframes page-in { from { opacity: 0 } to { opacity: 1 } }
+@keyframes rise { from { opacity: 0; transform: translateY(34px) } to { opacity: 1; transform: none } }
+@keyframes cue-pulse { 0%, 100% { transform: scaleY(.55); opacity: .4 } 50% { transform: scaleY(1); opacity: 1 } }
+@keyframes leaf-draw { to { stroke-dashoffset: 0 } }
+
+/* ---------- Utility ---------- */
+.center { text-align: center; }
+.center .eyebrow { justify-content: center; }
+.mt-2 { margin-top: 1rem; } .mt-4 { margin-top: 2rem; } .mt-6 { margin-top: 3rem; }
+.max-c { margin-left: auto; margin-right: auto; }
+
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px;
+  margin: -1px; padding: 0; overflow: hidden;
+  clip-path: inset(50%); white-space: nowrap; border: 0;
+}
+
+@media (max-width: 640px) {
+  .hero__actions .btn { width: 100%; }
+}
+
+/* ---------- Investors: the Center render ----------
+   The render is wide and short (2.7:1), so it is never cropped into a
+   tall hero. It runs full bleed at its own ratio and the ivory card
+   overlaps its lower edge, which is what makes it read as architecture
+   rather than as a stock banner. */
+.center-reveal { padding: 0 0 clamp(4rem, 9vw, 7.5rem); }
+.center-reveal__media { position: relative; width: 100%; overflow: hidden; background: var(--surface); }
+.center-reveal__media img {
+  width: 100%; height: auto; display: block;
+  aspect-ratio: 2376 / 876; object-fit: cover;
+}
+.center-reveal__media::after {
+  content: ""; position: absolute; inset: auto 0 0 0; height: 42%;
+  background: linear-gradient(to top, rgba(245, 240, 230, .92), rgba(245, 240, 230, 0));
+  pointer-events: none;
+}
+.center-reveal__card {
+  position: relative; z-index: 2;
+  width: min(760px, calc(100% - 2.5rem));
+  margin: clamp(-9rem, -7vw, -3.5rem) auto 0;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--olive);
+  padding: clamp(2rem, 4vw, 3.25rem);
+  text-align: center;
+  box-shadow: 0 30px 70px -40px rgba(52, 54, 46, .55);
+}
+.center-reveal__card .eyebrow { justify-content: center; }
+.center-reveal__card h2 { margin-top: .35rem; }
+.center-reveal__actions { margin-top: 2rem; }
+.center-reveal__note {
+  margin-top: 1.5rem; font-size: .8rem; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--muted);
+}
+@media (max-width: 720px) {
+  /* 12/5 keeps almost the whole storefront in frame on a phone: cover
+     scales by height, so a WIDER ratio here shows LESS of the building,
+     not more. The card barely overlaps, because the band is short. */
+  .center-reveal__media img { aspect-ratio: 12 / 5; object-position: center; }
+  .center-reveal__card { margin-top: -1.25rem; }
+}
+
+/* ---------- Investors: the donate band ----------
+   One giant link. The olive wipes up from the floor on hover and focus,
+   the arrow travels, and nothing else moves. */
+.give-band { padding: 0; background: var(--surface); }
+.give-band__link {
+  position: relative; display: block; overflow: hidden;
+  text-decoration: none; color: var(--ink);
+  background: var(--surface);
+  border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  padding: clamp(3.5rem, 8vw, 6.5rem) clamp(1.25rem, 4.5vw, 3rem);
+  transition: color .45s var(--ease);
+}
+.give-band__link::before {
+  content: ""; position: absolute; inset: 0; z-index: 0;
+  background: var(--olive);
+  transform: scaleY(0); transform-origin: bottom;
+  transition: transform .55s var(--ease);
+}
+.give-band__inner { position: relative; z-index: 1; display: block; text-align: center; }
+.give-band__eyebrow { display: flex; justify-content: center; color: var(--gold-deep); transition: color .45s var(--ease); }
+.give-band__word {
+  display: inline-flex; align-items: center; gap: clamp(1rem, 2.5vw, 2rem);
+  font-family: var(--font-head);
+  font-size: clamp(2.4rem, 7.5vw, 5.5rem); line-height: 1.05;
+  margin-top: .75rem;
+}
+.give-band__arrow { width: clamp(38px, 6vw, 76px); height: auto; color: var(--gold-deep); transition: transform .55s var(--ease), color .45s var(--ease); }
+.give-band__note {
+  display: block; max-width: 46ch; margin: 1.25rem auto 0;
+  color: var(--muted); font-size: .98rem; transition: color .45s var(--ease);
+}
+.give-band__link:hover, .give-band__link:focus-visible { color: var(--ondark); }
+.give-band__link:hover::before, .give-band__link:focus-visible::before { transform: scaleY(1); }
+/* Measured on the olive fill: --ondark is 5.40:1, --ondark-2 only 3.61:1
+   and it carries body copy here, so both lines go full ivory on hover.
+   The arrow is a graphic at 3:1, and --gold-ondark measures 2.53:1 on
+   olive, so it uses the lighter #E3C489 at 3.66:1. */
+.give-band__link:hover .give-band__word,
+.give-band__link:focus-visible .give-band__word,
+.give-band__link:hover .give-band__eyebrow,
+.give-band__link:focus-visible .give-band__eyebrow,
+.give-band__link:hover .give-band__note,
+.give-band__link:focus-visible .give-band__note { color: var(--ondark); }
+.give-band__link:hover .give-band__arrow,
+.give-band__link:focus-visible .give-band__arrow { color: #E3C489; transform: translateX(14px); }
+.give-band__link:focus-visible { outline: 2px solid var(--olive); outline-offset: -6px; }
+@media (prefers-reduced-motion: reduce) {
+  .give-band__link::before, .give-band__arrow { transition: none; }
+}
+
+/* ---------- Dialog ---------- */
+.lh-dialog {
+  border: 0; padding: 0; background: transparent;
+  margin: auto;
+  width: min(640px, calc(100% - 2rem));
+  max-height: min(88vh, 900px);
+  color: var(--ink);
+}
+.lh-dialog::backdrop { background: rgba(46, 48, 40, .72); backdrop-filter: blur(3px); }
+.lh-dialog__panel {
+  position: relative; background: var(--bg);
+  border-top: 3px solid var(--olive);
+  padding: clamp(1.6rem, 3.2vw, 2.25rem);
+  max-height: min(88vh, 900px); overflow-y: auto;
+  box-shadow: 0 40px 90px -40px rgba(46, 48, 40, .7);
+}
+.lh-dialog__close {
+  position: absolute; top: .9rem; right: .9rem;
+  width: 42px; height: 42px; display: inline-flex; align-items: center; justify-content: center;
+  background: transparent; border: 1px solid var(--border); color: var(--ink-2);
+  cursor: pointer; transition: background .2s, color .2s, border-color .2s;
+}
+.lh-dialog__close svg { width: 18px; height: 18px; }
+/* The modal is a form in a fixed box, so it runs tighter than a page form
+   to keep the send button above the fold on a laptop. */
+.lh-dialog form { gap: .85rem; }
+.lh-dialog .form-row { gap: .85rem; }
+.lh-dialog h2 { font-size: clamp(1.8rem, 3vw, 2.3rem); }
+.lh-dialog__close:hover { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+@media (prefers-reduced-motion: no-preference) {
+  .lh-dialog[open] .lh-dialog__panel { animation: lh-dialog-in .4s var(--ease) both; }
+}
+@keyframes lh-dialog-in { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
