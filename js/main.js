@@ -316,6 +316,48 @@
   });
 
   /* ---------------------------------------------------------
+     Hero recede. The hero is held by position: sticky and the
+     page rolls over it. While it is held, the headline drifts
+     up and fades, the photo eases in, and a veil darkens what
+     is still showing, so the hero recedes under the page.
+     Custom properties only, so CSS owns every fallback.
+     --------------------------------------------------------- */
+  if (!REDUCED) {
+    var heroEl = document.querySelector('.hero');
+    if (heroEl) {
+      var veil = document.createElement('div');
+      veil.className = 'hero__veil';
+      veil.setAttribute('aria-hidden', 'true');
+      heroEl.appendChild(veil);
+
+      var RISE = 0.30;  /* headline travels this share of the hero height */
+      var FADE = 0.85;  /* how far the headline fades before it is covered */
+      var ZOOM = 0.07;  /* how far the photo eases in */
+      var DIM  = 0.50;  /* how dark the held hero goes */
+      var heroTicking = false;
+
+      var heroRun = function () {
+        heroTicking = false;
+        var h = heroEl.offsetHeight || 1;
+        var y = window.pageYOffset || document.documentElement.scrollTop || 0;
+        var p = y / h;                       /* 0 at rest, 1 once fully covered */
+        if (p < 0) { p = 0; } else if (p > 1) { p = 1; }
+        var st = heroEl.style;
+        st.setProperty('--hero-rise', (-p * h * RISE).toFixed(1) + 'px');
+        st.setProperty('--hero-fade', (1 - p * FADE).toFixed(3));
+        st.setProperty('--hero-zoom', (1 + p * ZOOM).toFixed(4));
+        st.setProperty('--hero-veil', (p * DIM).toFixed(3));
+      };
+      var heroQueue = function () {
+        if (!heroTicking) { heroTicking = true; requestAnimationFrame(heroRun); }
+      };
+      window.addEventListener('scroll', heroQueue, { passive: true });
+      window.addEventListener('resize', heroQueue);
+      heroRun();
+    }
+  }
+
+  /* ---------------------------------------------------------
      Parallax: the scripture band photo drifts against the scroll.
      Transform only, gated on motion preference and pointer size.
      --------------------------------------------------------- */

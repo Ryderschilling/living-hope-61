@@ -37,8 +37,8 @@
   --bg: #F5F0E6;            /* Warm Ivory, primary background */
   --surface: #FBF8F2;       /* Soft Warm White, cards and alternating sections */
   --sand: #EDE5D2;          /* deeper cream band */
-  --olive: #626443;         /* Living Hope Olive, primary brand */
-  --olive-deep: #4C4E33;    /* hover / active */
+  --olive: #6B6E4C;         /* Living Hope Olive, lightened Sep 2026 per Jessie */
+  --olive-deep: #575A3D;    /* hover / active */
   --sage: #96957A;          /* decorative only, fails contrast for text */
   --gold: #B38A48;          /* Antique Gold, thin lines and icons only */
   --gold-deep: #7E622C;     /* gold that passes 4.5:1 on ivory, for text */
@@ -48,10 +48,10 @@
   --muted: #68695C;         /* captions, 4.9:1 on ivory */
 
   /* dark ground (footer, scripture band) */
-  --dark: #2E3028;
+  --dark: #454839;          /* lightened Sep 2026: less heavy olive ground */
   --ondark: #F5F0E6;
-  --ondark-2: #C6C8B8;
-  --gold-ondark: #C9A05C;
+  --ondark-2: #D2D4C4;
+  --gold-ondark: #DCB776;
 
   --border: rgba(52, 54, 46, 0.16);
 
@@ -417,7 +417,7 @@ section { padding: clamp(4rem, 9vw, 7.5rem) 0; }
     overflow-y: auto; overscroll-behavior: contain;
     background:
       radial-gradient(135% 52% at 50% 100%, rgba(201, 160, 92, .22), rgba(201, 160, 92, 0) 62%),
-      linear-gradient(158deg, #4C4E33 0%, #3B3D2C 48%, #2E3028 100%);
+      linear-gradient(158deg, #575A3D 0%, #4C4F3D 48%, #454839 100%);
     /* the circle grows from the burger's own centre; JS writes --mx/--my/--mr */
     clip-path: circle(0px at var(--mx, 100%) var(--my, 38px));
     visibility: hidden;
@@ -584,6 +584,8 @@ section { padding: clamp(4rem, 9vw, 7.5rem) 0; }
 .hero--short { min-height: 100svh; }
 .hero__media { position: absolute; inset: 0; background: var(--dark); }
 .hero__media img { width: 100%; height: 100%; object-fit: cover; }
+/* home hero: sit the subject lower in the frame, keep the horizon visible */
+.hero__media--low img { object-position: center 15%; }
 .hero__scrim {
   position: absolute; inset: 0;
   background:
@@ -591,10 +593,34 @@ section { padding: clamp(4rem, 9vw, 7.5rem) 0; }
     linear-gradient(to top, rgba(28, 30, 22, .82) 0%, rgba(28, 30, 22, .38) 45%, rgba(28, 30, 22, .18) 100%),
     rgba(28, 30, 22, .18);
 }
+
+/* ---------- Hero recede ----------
+   The hero is already held (position: sticky, in the motion system below)
+   while the page rolls over it. This is the second half of that move: while
+   it is held, the headline drifts up and fades, the photo eases in a little,
+   and a veil darkens what is left, so the hero RECEDES under the page instead
+   of sitting dead still behind it. Never transform .hero itself, that would
+   fight the sticky pin and open a gap above it. JS writes the four
+   properties on .hero and the children inherit them; with no JS every
+   fallback is the resting state and nothing moves. */
+.hero__veil {
+  position: absolute; inset: 0; z-index: 3; pointer-events: none;
+  background: #1C1E16; opacity: var(--hero-veil, 0);
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero__veil { display: none; }
+}
 .hero__content {
   position: relative; z-index: 2; width: 100%;
   padding: calc(var(--header-h) + 4rem) 0 clamp(3.5rem, 8vw, 6rem);
   color: var(--bg);
+  transform: translate3d(0, var(--hero-rise, 0px), 0);
+  opacity: var(--hero-fade, 1);
+}
+.hero__media img { transform: scale(var(--hero-zoom, 1)); transform-origin: center 35%; }
+@media (prefers-reduced-motion: reduce) {
+  .hero__content { transform: none; opacity: 1; }
+  .hero__media img { transform: none; }
 }
 .hero .script { color: #E9DFC8; font-size: clamp(2.1rem, 3.6vw, 3.2rem); }
 .hero h1 { color: #FDFBF6; max-width: 15ch; margin: .75rem 0 1.25rem; }
@@ -657,7 +683,7 @@ section { padding: clamp(4rem, 9vw, 7.5rem) 0; }
 .band-dark h2, .band-dark h3 { color: var(--ondark); }
 .band-dark .script { color: var(--gold-ondark); }
 .band-dark .band-media { position: absolute; inset: 0; overflow: hidden; background: var(--dark); }
-.band-dark .band-media img { width: 100%; height: 100%; object-fit: cover; opacity: .38; }
+.band-dark .band-media img { width: 100%; height: 100%; object-fit: cover; opacity: .46; }
 .band-dark .band-media::after {
   content: ""; position: absolute; inset: 0; z-index: 1;
   background: linear-gradient(rgba(30, 32, 24, .55), rgba(30, 32, 24, .78));
