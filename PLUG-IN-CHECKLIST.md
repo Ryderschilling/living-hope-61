@@ -17,10 +17,26 @@ Pages: Home, About, Programs, Stories, Blog, Investors, Give, Contact, Survivor 
 - A content note sits above the testimony videos, per her request to warn people first.
 - Her face rule is in force on layout choices. See the photo item below.
 
-## 1. Donations, give.html
-She wrote: "I am ready to set this up when you give me the go." Give her the go on the call. She opens the giving account in Living Hope's name herself (Zeffy, 0% for nonprofits) and sends back the embed code. Never ask for her bank login, only the embed.
+## 1. Donations, give.html — EMBED IS IN, WAITING ON THE BANK LINK
 
-Where it goes: `give.html`, the comment marked `PLUG-IN SLOT: online giving embed`. Replace the inner content of the `data-donation-slot` panel. Until then the page shows give-by-mail details and works fine.
+**09-07: the Zeffy embed is wired into `give.html`.** Account is Living Hope Inc, campaign `donate-to-change-lives-23163`, public form at
+https://www.zeffy.com/en-US/donation-form/donate-to-change-lives-23163
+
+The slot now carries three paths, all three deliberate, do not delete any of them:
+1. `[data-zeffy-embed]` — Zeffy's v2 script hydrates this and sizes the frame itself. **Never set a height on it**, that fights their resize.
+2. `[data-zeffy-embed-fallback]` — only appears if their script fails to load. Ships a hard inline `height:450px`, which a donation form does not fit in, so `css/styles.css` overrides it to a responsive clamp with `!important`.
+3. `<noscript>` — the only thing a visitor with JS off sees, since neither the script nor its `onerror` handler can run. Links straight to the hosted form.
+
+Give-by-mail moved into its own panel underneath. Some donors will not use a card, and it is the only path if the iframe is ever blocked.
+
+### ⚠️ Still blocked on Jessie: LINK THE BANK
+Zeffy shows "Link your bank" unticked on the Living Hope account. Until she does it the form cannot take money. **Ryder does not do this step** — the agreement is that Jessie connects Living Hope's own bank details herself and he never handles her banking.
+
+### ⚠️ There is no Zeffy sandbox
+Zeffy's own docs: "we do not have a test mode." The go-live test, once the bank is linked, is a **real $1 donation with a real card, then refund it** from the dashboard. Confirm it lands in Payments and that the receipt email arrives. Budget five minutes.
+
+### Verifying the embed locally
+The cloud container's egress blocks zeffy.com, so a container screenshot only ever proves the FALLBACK path (which it did: the inline 450px correctly became 827px). **The live script path has to be checked on Ryder's machine at localhost:3000.** What good looks like: the form renders with no visible scrollbar inside it, and there is no dead cream gap under the submit button.
 
 ## 2. Confirm the EIN
 She wrote 38-432-4365. That is not a standard EIN shape, so it displays as **38-4324365** on the Give and Investors pages. Confirm the digits before launch.

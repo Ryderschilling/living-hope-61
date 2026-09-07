@@ -691,38 +691,31 @@ section { padding: clamp(4rem, 9vw, 7.5rem) 0; }
 
 
 /* ---------- Zeffy donation embed ----------
-   Zeffy hands you a snippet that is a fixed-height div wrapping an absolutely
-   positioned iframe. Its inline height is a guess made on their end, so it is
-   overridden here: too short and the form scrolls inside a box on a phone,
-   too tall and there is dead cream under the submit button on a desktop.
-   The wrapper is what carries the height; the iframe just fills it. Both are
-   set with !important because the snippet ships inline styles.
+   Zeffy's v2 snippet is TWO paths, and they need opposite treatment:
 
-   The embedded form renders without Zeffy branding, images or descriptions,
-   so the surrounding page has to supply the context. Do not delete the
-   give-by-mail block under it: some donors will not use a card, and it is the
-   only path if the iframe is ever blocked. */
-.zeffy-embed {
-  position: relative !important;
-  width: 100% !important;
+   1. `[data-zeffy-embed]` is hydrated by their script, which measures the
+      form and sizes the frame itself. Do NOT set a height on it. An earlier
+      pass here forced one and would have fought their resize.
+   2. `[data-zeffy-embed-fallback]` only appears if that script fails to
+      load, and ships a hard inline height:450px. A donation form does not
+      fit in 450px, so it would scroll inside a short box. That one IS
+      overridden, and needs !important because the height is inline.
+
+   The embedded form renders with no Zeffy branding, images or description,
+   so the page around it carries all the context. */
+.give-embed { margin-top: clamp(1.75rem, 4vw, 2.5rem); text-align: left; }
+.give-embed iframe { border: 0; display: block; }
+
+[data-zeffy-embed-fallback] > div {
   height: clamp(760px, 88vh, 1040px) !important;
-  overflow: hidden !important;
-  background: var(--surface);
-  border: 1px solid var(--border);
-}
-.zeffy-embed iframe {
-  position: absolute !important;
-  inset: 0 !important;
-  width: 100% !important;
-  height: 100% !important;
-  border: 0 !important;
 }
 @media (max-width: 640px) {
-  .zeffy-embed { height: clamp(820px, 108vh, 1180px) !important; }
+  [data-zeffy-embed-fallback] > div { height: clamp(820px, 108vh, 1180px) !important; }
 }
-/* Anything sitting in the slot before the embed lands, or if it fails to
-   load, still reads as a finished panel rather than an empty frame. */
-.zeffy-fallback { border: 1px solid var(--border); }
+
+/* No JS at all: neither Zeffy's script nor its onerror fallback can run, so
+   the slot would be empty. This is the only thing the visitor sees then. */
+.give-nojs { border: 1px solid var(--border); }
 
 /* ---------- Cards / panels ---------- */
 .panel {
