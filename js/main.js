@@ -388,6 +388,102 @@
   }
 
   /* ---------------------------------------------------------
+     Allies, told on the scroll. The section is a tall track with a
+     sticky stage inside it, so the page keeps scrolling while the stage
+     is pinned. This turns that distance into one number, --ap, and a
+     few derived ones; CSS spends them.
+
+       0.00 - 0.62   the headline drifts across and its words settle
+       0.42 - 1.00   the lede and the three ally marks rise into place
+
+     The two overlap on purpose: the marks start coming up while the
+     line is still moving, which is what makes it read as one gesture
+     instead of two. Custom properties only, so every fallback is CSS,
+     and the whole block is skipped for reduced motion.
+     --------------------------------------------------------- */
+  if (!REDUCED) {
+    var allies = document.querySelector('.allies-scroll');
+    if (allies) {
+      var aStage = allies.querySelector('.allies-scroll__stage');
+      var aWords = Array.prototype.slice.call(allies.querySelectorAll('.allies-scroll__hed .w'));
+      var aRise  = allies.querySelector('.allies-scroll__rise');
+      var aEye   = allies.querySelector('.allies-scroll__eyebrow');
+      var aMarks = Array.prototype.slice.call(allies.querySelectorAll('.allies-grid a'));
+      var aTick  = false;
+
+      var clamp01 = function (n) { return n < 0 ? 0 : (n > 1 ? 1 : n); };
+      /* ease-out cubic, the same shape as --ease */
+      var ease = function (t) { var m = 1 - t; return 1 - m * m * m; };
+
+      var aRun = function () {
+        aTick = false;
+        /* the stage is only pinned while the track is passing the viewport */
+        var vh = window.innerHeight;
+        var pinned = aStage && getComputedStyle(aStage).position === 'sticky';
+        if (!pinned) {                    /* short viewport, or CSS opted out */
+          allies.style.cssText = '';
+          aWords.forEach(function (w) { w.style.cssText = w.getAttribute('style') || ''; });
+          return;
+        }
+        var r = allies.getBoundingClientRect();
+        var travel = allies.offsetHeight - vh;
+        var p = travel > 0 ? clamp01(-r.top / travel) : 0;
+
+        /* Two clocks, not one. `p` only starts once the stage PINS, and the
+           section spends a whole viewport height rising into view before
+           that. Driving the words off `p` meant that entry was a blank cream
+           band with the headline at opacity 0. `enter` covers the approach,
+           so the line is already assembling as the section arrives, and `p`
+           owns everything that happens while it is held. */
+        var enter = clamp01((vh - r.top) / (vh * 0.92));
+
+        /* headline: a measured drift, not a fly-past. It has to stay
+           readable the whole way, so this is a fraction of the viewport,
+           and it lands at 0 so the finished block is centred. */
+        var pHed = ease(clamp01(p / 0.62));
+        allies.style.setProperty('--hed-x', ((1 - pHed) * 0.09 * window.innerWidth).toFixed(1) + 'px');
+
+        /* words settle in sequence as the section arrives */
+        var n = aWords.length || 1;
+        aWords.forEach(function (w, i) {
+          var pw = ease(clamp01((enter - (i / n) * 0.4) / 0.5));
+          w.style.setProperty('--w-o', pw.toFixed(3));
+          w.style.setProperty('--w-y', ((1 - pw) * 44).toFixed(1) + 'px');
+          w.style.setProperty('--w-r', ((1 - pw) * 4).toFixed(2) + 'deg');
+        });
+
+        /* eyebrow leads the headline in by a hair */
+        var pEb = ease(clamp01(enter / 0.45));
+        if (aEye) {
+          aEye.style.setProperty('--eb-o', pEb.toFixed(3));
+          aEye.style.setProperty('--eb-y', ((1 - pEb) * 18).toFixed(1) + 'px');
+        }
+
+        /* the rise: lede first, then the marks, each on its own slice */
+        var pRise = clamp01((p - 0.42) / 0.5);
+        var eRise = ease(pRise);
+        if (aRise) {
+          aRise.style.setProperty('--rise-o', eRise.toFixed(3));
+          aRise.style.setProperty('--rise-y', ((1 - eRise) * 56).toFixed(1) + 'px');
+        }
+        var m = aMarks.length || 1;
+        aMarks.forEach(function (a, i) {
+          var pm = ease(clamp01((pRise - (i / m) * 0.34) / 0.62));
+          a.style.setProperty('--mark-o', pm.toFixed(3));
+          a.style.setProperty('--mark-y', ((1 - pm) * 78).toFixed(1) + 'px');
+          a.style.setProperty('--mark-s', (0.88 + pm * 0.12).toFixed(4));
+        });
+      };
+      var aQueue = function () {
+        if (!aTick) { aTick = true; requestAnimationFrame(aRun); }
+      };
+      window.addEventListener('scroll', aQueue, { passive: true });
+      window.addEventListener('resize', aQueue);
+      aRun();
+    }
+  }
+
+  /* ---------------------------------------------------------
      Year
      --------------------------------------------------------- */
   var yr = document.getElementById('yr');

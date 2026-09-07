@@ -643,14 +643,134 @@ section { padding: clamp(4rem, 9vw, 7.5rem) 0; }
 .hero__actions { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 2.25rem; }
 .hero__actions .btn { border-width: 1.5px; }
 
-/* ---------- Botanical divider ---------- */
+/* ---------- Olive botanicals ----------
+   Drawn to match Jesse's business cards: a sage sprig with alternating
+   pointed leaves. One sprite of three symbols per page, referenced with
+   <use>, so a page carries the geometry once no matter how many sit on it.
+   Leaves are currentColor at three opacities, so a placement recolours by
+   setting `color` alone (olive on the light beds, warm gold on the dark). */
+.sprig__leaf--a { opacity: .84; --leaf-o: .84; }
+.sprig__leaf--b { opacity: .52; --leaf-o: .52; }
+.sprig__leaf--c { opacity: .68; --leaf-o: .68; }
+.sprig__stem { opacity: .7; }
+
+/* the small gold rule that replaced the old line divider */
 .leaf-divider {
   display: flex; justify-content: center; padding: 0 0 .25rem;
 }
-.leaf-divider svg { width: 84px; height: auto; color: var(--gold); }
+.leaf-divider svg { width: 96px; height: auto; color: var(--gold); }
 .band-dark .leaf-divider, .band-cta .leaf-divider { padding-bottom: 1.15rem; }
 .band-dark .leaf-divider svg { color: var(--gold-ondark); }
 .band-cta .leaf-divider svg { color: var(--gold-deep); }
+
+/* full sprigs, set into the corners of a band, behind the content */
+.botanical {
+  position: absolute; z-index: 0; pointer-events: none;
+  color: var(--olive); opacity: .3;
+  width: clamp(140px, 17vw, 250px);
+}
+.botanical svg { width: 100%; height: auto; display: block; }
+/* content sits above them; the bands clip whatever runs past the edge */
+.band-cta, .band-surface, .band-sand { position: relative; overflow: hidden; }
+.band-cta .container, .band-surface .container, .band-sand .container { position: relative; z-index: 1; }
+
+.botanical--cta-l { left: -3%; bottom: -12%; }
+.botanical--cta-r { right: -3%; top: -14%; }
+.botanical--mission { left: -4%; top: -12%; opacity: .22; }
+.botanical--about { left: -5%; bottom: -12%; opacity: .24; }
+
+/* Phones: one sprig per band is plenty, and a 250px leaf spray behind a
+   44px tap target reads as noise. Keep the pair only where it frames a
+   heading, shrink it, and drop the two decorative singles entirely. */
+@media (max-width: 720px) {
+  .botanical { width: clamp(104px, 30vw, 150px); opacity: .24; }
+  .botanical--cta-l { left: -12%; bottom: -6%; }
+  .botanical--cta-r { right: -12%; top: -7%; }
+  .botanical--mission, .botanical--about { display: none; }
+}
+
+
+/* ---------- Allies: the scroll-told section ----------
+   A tall track with a sticky stage inside it, so the page scrolls while the
+   stage is pinned. JS writes one number, --ap (0 to 1, how far through the
+   track we are) plus a per-word pair, and CSS spends it: the headline drifts
+   across and its words settle in, then the lede and the three ally marks rise.
+
+   Every default below is the RESTING state (drift 0, opacity 1, no offset),
+   so with no JS, or with reduced motion, the section is simply a normal
+   centred block that happens to have a big headline. The tall track is
+   applied only under .js, for the same reason. */
+.allies-scroll {
+  position: relative;
+  background: var(--surface);
+  padding: clamp(4.5rem, 9vw, 7.5rem) 0;
+}
+.js .allies-scroll { height: 300vh; padding: 0; }
+.allies-scroll__stage { display: grid; place-items: center; }
+.js .allies-scroll__stage {
+  position: sticky; top: 0; height: 100svh; overflow: hidden;
+}
+.allies-scroll__inner {
+  width: 100%; max-width: 1200px; margin: 0 auto;
+  padding: 0 var(--gutter); text-align: center;
+}
+.allies-scroll__eyebrow {
+  opacity: var(--eb-o, 1);
+  transform: translate3d(0, var(--eb-y, 0), 0);
+}
+.allies-scroll__hed {
+  font-size: clamp(2.1rem, 6.6vw, 5.4rem);
+  line-height: 1.02; letter-spacing: -.015em;
+  max-width: 20ch; margin: .6rem auto 0;
+  transform: translate3d(var(--hed-x, 0px), 0, 0);
+  will-change: transform;
+}
+/* each word carries its own offset so the line assembles as it travels */
+.allies-scroll__hed .w {
+  display: inline-block;
+  opacity: var(--w-o, 1);
+  transform: translate3d(0, var(--w-y, 0px), 0) rotate(var(--w-r, 0deg));
+  transform-origin: 50% 100%;
+}
+.allies-scroll__rise {
+  opacity: var(--rise-o, 1);
+  transform: translate3d(0, var(--rise-y, 0px), 0);
+  margin-top: clamp(1.5rem, 3vw, 2.5rem);
+}
+.allies-scroll__lede { max-width: 62ch; margin: 0 auto; }
+.allies-scroll .allies-grid { margin-top: clamp(1.75rem, 4vw, 3rem); }
+/* the marks come up one after another, each on its own share of the rise */
+.allies-scroll .allies-grid a {
+  opacity: var(--mark-o, 1);
+  transform: translate3d(0, var(--mark-y, 0px), 0) scale(var(--mark-s, 1));
+}
+@media (prefers-reduced-motion: reduce) {
+  .js .allies-scroll { height: auto; padding: clamp(4.5rem, 9vw, 7.5rem) 0; }
+  .js .allies-scroll__stage { position: static; height: auto; overflow: visible; }
+  .allies-scroll__hed, .allies-scroll__hed .w,
+  .allies-scroll__rise, .allies-scroll__eyebrow,
+  .allies-scroll .allies-grid a { transform: none; opacity: 1; }
+}
+/* Phones: the stage still pins, but the stacked one-per-row logo grid made
+   the block taller than the screen and the third mark was cut off at the
+   fold. Inside this section only, the marks sit three across and the lede
+   tightens, so the whole told sequence fits one phone screen. */
+@media (max-width: 640px) {
+  .allies-scroll__inner { padding: 0 1rem; }
+  .allies-scroll__lede { font-size: .92rem; max-width: 40ch; }
+  .allies-scroll .allies-grid {
+    grid-template-columns: repeat(3, 1fr); gap: .5rem;
+    margin-top: 1.5rem;
+  }
+  .allies-scroll .allies-grid a { padding: .7rem .5rem; min-height: 76px; }
+  .allies-scroll .allies-grid img { max-height: 40px; }
+}
+/* Short viewports cannot hold a 5rem headline plus three marks at once.
+   Give the stage its own scroll height rather than clipping the logos. */
+@media (max-height: 660px) {
+  .js .allies-scroll__stage { height: auto; position: static; overflow: visible; }
+  .js .allies-scroll { height: auto; padding: clamp(4.5rem, 9vw, 7.5rem) 0; }
+}
 
 /* ---------- Cards / panels ---------- */
 .panel {
@@ -1084,10 +1204,12 @@ main::after {
   .allies-grid a:hover { translate: 0 -4px; }
 
   /* Botanical divider draws itself */
-  .leaf-divider path { stroke-dasharray: 130; stroke-dashoffset: 130; }
-  .leaf-divider.is-in path { animation: leaf-draw 1.8s var(--ease) forwards; }
-  .leaf-divider.is-in path:nth-child(2) { animation-delay: .25s; }
-  .leaf-divider.is-in path:nth-child(3) { animation-delay: .5s; }
+  .leaf-divider .sprig__stem { stroke-dasharray: 130; stroke-dashoffset: 130; }
+  .leaf-divider.is-in .sprig__stem { animation: leaf-draw 1.4s var(--ease) forwards; }
+  .leaf-divider .sprig__leaf { opacity: 0; transform: scale(.6); transform-origin: center; transform-box: fill-box; }
+  .leaf-divider.is-in .sprig__leaf { animation: leaf-open .7s var(--ease) forwards; }
+  .leaf-divider.is-in .sprig__leaf:nth-of-type(2n) { animation-delay: .12s; }
+  .leaf-divider.is-in .sprig__leaf:nth-of-type(3n) { animation-delay: .24s; }
 
   /* Parallax layer (JS drives translateY) */
   .band-media img { will-change: transform; }
@@ -1191,6 +1313,10 @@ main::after {
 @keyframes rise { from { opacity: 0; transform: translateY(34px) } to { opacity: 1; transform: none } }
 @keyframes cue-pulse { 0%, 100% { transform: scaleY(.55); opacity: .4 } 50% { transform: scaleY(1); opacity: 1 } }
 @keyframes leaf-draw { to { stroke-dashoffset: 0 } }
+@keyframes leaf-open {
+  from { opacity: 0; transform: scale(.6); }
+  to   { opacity: var(--leaf-o, .8); transform: scale(1); }
+}
 
 /* ---------- Utility ---------- */
 .center { text-align: center; }
