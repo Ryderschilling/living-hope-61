@@ -689,6 +689,41 @@ section { padding: clamp(4rem, 9vw, 7.5rem) 0; }
   .botanical--mission, .botanical--about { display: none; }
 }
 
+
+/* ---------- Zeffy donation embed ----------
+   Zeffy hands you a snippet that is a fixed-height div wrapping an absolutely
+   positioned iframe. Its inline height is a guess made on their end, so it is
+   overridden here: too short and the form scrolls inside a box on a phone,
+   too tall and there is dead cream under the submit button on a desktop.
+   The wrapper is what carries the height; the iframe just fills it. Both are
+   set with !important because the snippet ships inline styles.
+
+   The embedded form renders without Zeffy branding, images or descriptions,
+   so the surrounding page has to supply the context. Do not delete the
+   give-by-mail block under it: some donors will not use a card, and it is the
+   only path if the iframe is ever blocked. */
+.zeffy-embed {
+  position: relative !important;
+  width: 100% !important;
+  height: clamp(760px, 88vh, 1040px) !important;
+  overflow: hidden !important;
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+.zeffy-embed iframe {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  border: 0 !important;
+}
+@media (max-width: 640px) {
+  .zeffy-embed { height: clamp(820px, 108vh, 1180px) !important; }
+}
+/* Anything sitting in the slot before the embed lands, or if it fails to
+   load, still reads as a finished panel rather than an empty frame. */
+.zeffy-fallback { border: 1px solid var(--border); }
+
 /* ---------- Cards / panels ---------- */
 .panel {
   background: var(--surface);
